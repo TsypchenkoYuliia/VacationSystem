@@ -4,9 +4,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BusinessLogic.Services.Intarfaces;
 using Domain.DomainModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -19,10 +21,19 @@ namespace WebApi.Controllers
     [Route("auth/token")]
     public class LoginController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult Token(string username, string password)
+        private readonly IUserService _userService;
+        private readonly SignInManager<User> _signInManager;
+
+        public LoginController(IUserService userService, SignInManager<User> signInManager)
         {
-            var identity = GetIdentity(username, password);
+            _userService = userService;
+            _signInManager = signInManager;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Token(string username, string password)
+        {
+            var identity = await GetIdentity(username, password);
 
             if (identity == null)
             {
@@ -49,11 +60,12 @@ namespace WebApi.Controllers
         }
 
 
-        private ClaimsIdentity GetIdentity(string username, string password)
+        private async Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
-            //User user = people.FirstOrDefault(x => x.Login == username && x.Password == password);
-            User user = null;
-            if (user != null)
+            User user = await _userService.GetUser(x => x.UserName == username);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+
+            if (result.Succeeded)
             {
                 var claims = new List<Claim>
                 {

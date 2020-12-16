@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DataAccess.Repositories
 {
-    public class UserRepository : BaseRepository<User, int>
+    public class UserRepository : BaseRepository<User, string>
     {
         public UserRepository(VacationSystemContext context) : base(context) { }
         

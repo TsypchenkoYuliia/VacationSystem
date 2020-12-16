@@ -42,11 +42,6 @@ namespace DataAccess.Repositories.Interfaces
             return await Entities.FirstOrDefaultAsync(predicate);
         }
 
-        public virtual async Task<TEntity> FindAsync(TKey id)
-        {
-            return await Entities.FindAsync(id);
-        }
-
         public virtual async Task<IReadOnlyCollection<TEntity>> GetAllAsync()
         {
             return await Entities.ToListAsync();

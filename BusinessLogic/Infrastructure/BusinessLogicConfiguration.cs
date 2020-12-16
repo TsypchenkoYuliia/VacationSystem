@@ -1,4 +1,6 @@
-﻿using DataAccess.Context;
+﻿using BusinessLogic.Services;
+using BusinessLogic.Services.Intarfaces;
+using DataAccess.Context;
 using DataAccess.Infrastructure;
 using Domain.DomainModel;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +18,7 @@ namespace BusinessLogic.Infrastructure
         public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             DataAccessConfiguration.ConfigureServices(services, configuration);
-            
+            services.AddScoped<IUserService, UserService>();
         }
         public static async Task ConfigureIdentityInicializerAsync(IServiceProvider provider)
         {
