@@ -20,7 +20,7 @@ namespace WebApi.Controllers
     public class LoginController : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Token(string username, string password)
+        public IActionResult Token(string username, string password)
         {
             var identity = GetIdentity(username, password);
 
@@ -30,7 +30,6 @@ namespace WebApi.Controllers
             }
 
             var now = DateTime.UtcNow;
-            // создаем JWT-токен
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
