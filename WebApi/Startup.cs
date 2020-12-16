@@ -33,23 +33,7 @@ namespace WebApi
             BusinessLogicConfiguration.ConfigureServices(services, Configuration);
             BusinessLogicConfiguration.ConfigureIdentityInicializerAsync(services.BuildServiceProvider());
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.RequireHttpsMetadata = false;
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {                            
-                            ValidateIssuer = true,                            
-                            ValidIssuer = AuthOptions.ISSUER,                            
-                            ValidateAudience = true,                           
-                            ValidAudience = AuthOptions.AUDIENCE,                           
-                            ValidateLifetime = true,                           
-                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),                          
-                            ValidateIssuerSigningKey = true,
-                        };
-                    });
-
-
+           
             services.AddControllers(mvcOtions =>
             {
                 mvcOtions.EnableEndpointRouting = false;
@@ -83,16 +67,34 @@ namespace WebApi
                     }
                 });
             });
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+               
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                };
+            });
+
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
 
             app.UseHttpsRedirection();
 
@@ -108,7 +110,6 @@ namespace WebApi
 
             app.UseAuthentication();
             app.UseAuthorization();
-
            
             app.UseMvc();
         }

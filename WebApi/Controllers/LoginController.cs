@@ -23,11 +23,13 @@ namespace WebApi.Controllers
     {
         private readonly IUserService _userService;
         private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
-        public LoginController(IUserService userService, SignInManager<User> signInManager)
+        public LoginController(IUserService userService, SignInManager<User> signInManager, UserManager<User> userManager)
         {
             _userService = userService;
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -48,6 +50,7 @@ namespace WebApi.Controllers
                     claims: identity.Claims,
                     expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+           
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             var response = new
@@ -64,12 +67,13 @@ namespace WebApi.Controllers
         {
             User user = await _userService.GetUser(x => x.UserName == username);
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
-
+         
             if (result.Succeeded)
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName)                    
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, (await _userManager.GetRolesAsync(user)).FirstOrDefault()),
                 };
 
                 ClaimsIdentity claimsIdentity =

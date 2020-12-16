@@ -10,7 +10,7 @@ namespace BusinessLogic.Services.Intarfaces
     public interface IUserService
     {
         Task<User> GetUser(Expression<Func<User, bool>> predicate);
-        Task CreateUser(User user);
+        Task<User> CreateUser(User user, string password);
         Task UpdateUser(User newUser);
         Task DeleteUser(string id);
     }

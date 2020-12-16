@@ -22,9 +22,14 @@ namespace BusinessLogic.Services
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task CreateUser(User user)
+        public async Task<User> CreateUser(User user, string password)
         {
-            await _repository.CreateAsync(user);
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (result.Succeeded)
+                return user;
+            else
+                return null;
         }
 
         public async Task DeleteUser(string id)
