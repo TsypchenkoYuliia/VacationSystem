@@ -4,11 +4,13 @@ using System.Text;
 
 namespace DataAccess.Context.Enum
 {
-    public static class RoleName
+
+    
+    public enum RoleName : int
     {
-        public const string manager = "Manager";
-        public const string accountant = "Accountant";
-        public const string employee = "Employee";
-        public const string admin = "Admin";
+        Manager = 1,
+        Accountant = 2,
+        Employee = 3,
+        Admin = 4
     }
 }

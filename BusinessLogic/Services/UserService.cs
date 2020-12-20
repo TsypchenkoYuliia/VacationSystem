@@ -4,6 +4,7 @@ using Domain.DomainModel;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +41,15 @@ namespace BusinessLogic.Services
         public async Task<User> GetUser(Expression<Func<User, bool>> predicate)
         {
             return await _repository.FindAsync(predicate);
+        }
+
+        public async Task<IReadOnlyCollection<User>> GetUsers(string name, string role)
+        {
+            Expression<Func<User, bool>> condition = user =>
+                (name == null || (user.FirstName + " " + user.LastName).ToLower().Contains(name.ToLower()))
+                && (role == null || user.Role == role);
+
+            return await _repository.FilterAsync(condition);
         }
 
         public async Task UpdateUser(User newUser)

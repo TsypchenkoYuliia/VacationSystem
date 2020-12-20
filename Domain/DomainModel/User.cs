@@ -15,6 +15,8 @@ namespace Domain.DomainModel
         {
             Requests = new List<Request>();
         }
+        
+        public string Role { get; set; }
 
     }
 }
