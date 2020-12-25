@@ -36,10 +36,14 @@ namespace BusinessLogic.Services
         {
             if (await IsRequestCorrect(obj))
             {
+                //IDs of the reviewers come from the UI, the collection of reviewers needs to be filled
                 FillReviewers(obj);
+
+                //when creating an request, the default status is new
                 obj.State = VacationState.New;
                 await _repository.CreateAsync(obj);
 
+                //for creating email
                 var notification = new RequestUpdatedNotification { Request = obj };
                 await _mediator.Publish(notification);
 
@@ -52,6 +56,7 @@ namespace BusinessLogic.Services
         public async Task<IReadOnlyCollection<Request>> GetAllAsync(string userId, DateTime? start = null, DateTime? end = null, int? stateId = null, int? typeId = null)
         {
 
+            //user can get all requests or filter
             Expression<Func<Request, bool>> condition = request =>
                 (request.UserId == userId)
                 && (start == null || request.StartDate.Date >= start)
@@ -74,11 +79,12 @@ namespace BusinessLogic.Services
         public async Task UpdateAsync(int requestId, Request newModel)
         {
             var requestFromDb = await _repository.FindAsync(r => r.Id == requestId); 
+            
             if (requestFromDb == null)
                 throw new RequestNotFoundException($"Request not found: RequestId={requestId}", 409);
+
             if (newModel.UserId != requestFromDb.UserId)      
                 throw new ConflictException($"Current user is not the author of the request (userId: {newModel.UserId}, requestId: {requestId})", 409);
-
 
             bool needToNotify = false;
 
@@ -87,7 +93,7 @@ namespace BusinessLogic.Services
                 switch (requestFromDb.State)
                 {
                     case VacationState.New:
-                        newModel.ParentRequestId = requestFromDb.Id;
+                        //newModel.ParentRequestId = requestFromDb.Id;
                         if (await IsRequestCorrect(newModel))
                         {
                             newModel.ParentRequestId = null;
@@ -140,10 +146,11 @@ namespace BusinessLogic.Services
 
             switch (requestFromDb.State)
             {
+                //if new - can be deleted
                 case VacationState.New:
                     await _repository.DeleteAsync(requestId);
                     break;
-
+                //otherwise - status Rejected
                 case VacationState.InProgress:
                 case VacationState.Approved:
                     if (requestFromDb.EndDate <= DateTime.Now.Date)
@@ -169,6 +176,8 @@ namespace BusinessLogic.Services
             if (!Enumerable.SequenceEqual(approvedReviews.Select(r => r.ReviewerId), changedModel.ReviewsIds.Take(approvedReviews.Count())))
                 throw new ConflictException("Approved reviews can't be changed", 409);   
 
+
+            //update reviewers
             var replacedReviews = sourceRequest.Reviews.Skip(approvedReviews.Count()).ToList();
             var newReviewers = changedModel.ReviewsIds.Skip(approvedReviews.Count()).ToList();
 
@@ -176,6 +185,7 @@ namespace BusinessLogic.Services
                 throw new ConflictException("Last review can't be already approved", 409);
 
             bool isActiveReviewReplace = replacedReviews.First().ReviewerId != newReviewers.First();
+
             if (!isActiveReviewReplace)
             {
                 replacedReviews.RemoveAt(0);
@@ -212,6 +222,7 @@ namespace BusinessLogic.Services
 
         private async Task<bool> ValidateAccounting(IEnumerable<string> reviewerId)
         {
+            //check first reviewer, must be Accountant
             var accountantReview = await _userService.GetUser(reviewerId.FirstOrDefault());
             accountantReview.Role = (await _userManager.GetRolesAsync(accountantReview)).FirstOrDefault();
             return (accountantReview.Role == RoleName.Accountant.ToString());
@@ -219,6 +230,7 @@ namespace BusinessLogic.Services
 
         private async Task<bool> ValidateManagers(ICollection<string> reviewerIds)
         {
+            //check the rest of the reviewers, there should only be managers
             reviewerIds = reviewerIds.Skip(1).ToList();
 
             var managerReviews = reviewerIds.Select(rId => _userService.GetUser(rId).Result).ToList();
@@ -229,15 +241,19 @@ namespace BusinessLogic.Services
             return managerReviews.Any() && managerReviews.All(r => r.Role == RoleName.Manager.ToString());
         }
 
+        //reviewers should not be repeated
         private bool IsNoDuplicate(ICollection<string> ids) => (ids != null && ids.Count() == ids.Distinct().Count());
 
         private async Task<bool> IsRequestCorrect(Request request)
         {
-                if (String.IsNullOrEmpty(request.Comment))
+            //comment is required field
+            if (String.IsNullOrEmpty(request.Comment))
                     throw new RequiredArgumentNullException("Comment field is empty", 409);
 
+            //check reviewers
             await IsReviewsCorrect(request);
 
+            //checking vacation dates
             if (await IntersectionDates(request))
                 throw new ConflictException("Dates intersection", 409);
 
@@ -249,6 +265,7 @@ namespace BusinessLogic.Services
             if (!await ValidateAccounting(request.ReviewsIds))
                 throw new NoReviewerException("Not defined accounting", 409);
 
+            //reviewers must have managers
             if (request.Type == VacationType.Administrative || request.Type == VacationType.Study || request.Type == VacationType.Annual)
             {
                 if (!await ValidateManagers(request.ReviewsIds))

@@ -16,10 +16,10 @@ namespace DataAccess.Infrastructure
     {
         public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IRepository<User, string>, UserRepository>();
-            services.AddScoped<IRepository<Request, int>, RequestRepository>();
-            services.AddScoped<IRepository<Review, int>, ReviewRepository>();
-
+            services.AddTransient<IRepository<Review, int>, ReviewRepository>();
+            services.AddTransient<IRepository<User, string>, UserRepository>();
+            services.AddTransient<IRepository<Request, int>, RequestRepository>();
+            
             services.AddDbContext<VacationSystemContext>(option =>
                 option.UseSqlServer(configuration.GetConnectionString("defaultConnection")));
 

@@ -20,9 +20,10 @@ namespace BusinessLogic.Infrastructure
         public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             DataAccessConfiguration.ConfigureServices(services, configuration);
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRequestService, RequestService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IRequestService, RequestService>();
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddTransient<IReviewService, ReviewService>();
         }
         public static async Task ConfigureIdentityInicializerAsync(IServiceProvider provider)
         {
