@@ -8,7 +8,7 @@ namespace Domain.DomainModel
     {
         public int Id { get; set; }
         public User Reviewer { get; set; }
-        public int ReviewerId { get; set; }
+        public string ReviewerId { get; set; }
         public bool? IsApproved { get; set; }
         public Request Request { get; set; }
         public int RequestId { get; set; }

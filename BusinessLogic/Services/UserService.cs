@@ -38,9 +38,14 @@ namespace BusinessLogic.Services
             await _repository.DeleteAsync(id);
         }
 
-        public async Task<User> GetUser(Expression<Func<User, bool>> predicate)
+        public async Task<User> GetUser(string id)
         {
-            return await _repository.FindAsync(predicate);
+            return await _repository.FindAsync(x=>x.Id==id);
+        }
+
+        public async Task<User> GetUser(Expression<Func<User, bool>> predicat)
+        {
+            return await _repository.FindAsync(predicat);
         }
 
         public async Task<IReadOnlyCollection<User>> GetUsers(string name, string role)

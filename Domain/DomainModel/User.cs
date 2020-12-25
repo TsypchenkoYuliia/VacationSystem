@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain.DomainModel
@@ -15,7 +16,8 @@ namespace Domain.DomainModel
         {
             Requests = new List<Request>();
         }
-        
+
+        [NotMapped]
         public string Role { get; set; }
 
     }

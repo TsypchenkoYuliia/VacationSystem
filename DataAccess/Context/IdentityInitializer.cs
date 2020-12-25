@@ -32,7 +32,7 @@ namespace DataAccess.Context
 
             if ((await _userManager.FindByNameAsync(login)) == null)
             {
-                var user = new User() { UserName = login, Email = email, FirstName = name, LastName = "" };
+                var user = new User() { UserName = login, Email = email, FirstName = name, LastName = "", Role = role };
                 var saveuser = await _userManager.CreateAsync(user, password);
 
                 if (saveuser.Succeeded)

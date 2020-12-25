@@ -3,11 +3,13 @@ using BusinessLogic.Services.Intarfaces;
 using DataAccess.Context;
 using DataAccess.Infrastructure;
 using Domain.DomainModel;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +21,8 @@ namespace BusinessLogic.Infrastructure
         {
             DataAccessConfiguration.ConfigureServices(services, configuration);
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRequestService, RequestService>();
+            services.AddMediatR(Assembly.GetExecutingAssembly());
         }
         public static async Task ConfigureIdentityInicializerAsync(IServiceProvider provider)
         {
