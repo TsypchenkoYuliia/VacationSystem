@@ -44,7 +44,7 @@ namespace BusinessLogic.Services
                 await _repository.CreateAsync(obj);
 
                 //for creating email
-                var notification = new RequestUpdatedNotification { Request = obj };
+                var notification = new RequestCreatedNotification { Request = obj };
                 await _mediator.Publish(notification);
 
                 return obj;

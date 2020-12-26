@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLogic.Infrastructure;
+using EmailTemplateRender.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,15 +31,16 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             BusinessLogicConfiguration.ConfigureServices(services, Configuration);
             BusinessLogicConfiguration.ConfigureIdentityInicializerAsync(services.BuildServiceProvider());
 
-           
             services.AddControllers(mvcOtions =>
             {
                 mvcOtions.EnableEndpointRouting = false;
             }).AddNewtonsoftJson(options =>
                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" });
@@ -112,6 +114,7 @@ namespace WebApi
             app.UseAuthorization();
            
             app.UseMvc();
+
         }
     }
 }
