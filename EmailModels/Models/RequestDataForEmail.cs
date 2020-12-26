@@ -10,7 +10,7 @@ namespace EmailModels.Models
         public string AuthorFullName { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
-        public string Duration { get; set; }
+        public int Duration { get; set; }
         public string Comment { get; set; }
         public string ApprovedFullNames { get; set; }
         public string RejectedBy { get; set; }

@@ -41,11 +41,12 @@ namespace BusinessLogic.NotificationHandlers
         public async Task Handle(RequestCreatedNotification notification, CancellationToken cancellationToken)
         {
             Request request = notification.Request;
-            RequestDataForEmail model = new RequestDataForEmail { RequestType  = request.Type.ToString(),
-                StartDate= request.StartDate.Date.ToString(),
-                EndDate = request.EndDate.Date.ToString(),
-                Comment = request.Comment
-                //....
+
+            RequestDataForEmail model = new RequestDataForEmail { RequestType = request.Type.ToString(),
+                StartDate = request.StartDate.Date.ToString("dd/MM/yyyy"),
+                EndDate = request.EndDate.Date.ToString("dd/MM/yyyy"),
+                Comment = request.Comment,
+                Duration = request.EndDate.Date.Subtract(request.StartDate.Date).Days+1,        
             };
 
             User author = await _userManager.FindByIdAsync(request.UserId.ToString());
@@ -63,7 +64,7 @@ namespace BusinessLogic.NotificationHandlers
 
             string address = curReview.Reviewer.Email;
 
-            string theme = string.Format(model.AuthorFullName, model.StartDate, model.EndDate);
+            string theme = string.Format(model.AuthorFullName +", "+ model.StartDate + " - " + model.EndDate + ", " + "type: " + model.RequestType);
 
             string reference = _uiConfig.Url + $"other_requests/actions?review={curReview.Id}&action=";
 
