@@ -54,7 +54,7 @@ namespace BusinessLogic.Services
         }
 
         public async Task<IReadOnlyCollection<Request>> GetAllAsync(string userId, DateTime? start = null, DateTime? end = null, int? stateId = null, int? typeId = null)
-        {
+       {
 
             //user can get all requests or filter
             Expression<Func<Request, bool>> condition = request =>
@@ -161,7 +161,7 @@ namespace BusinessLogic.Services
                     await _repository.UpdateAsync(requestFromDb);
 
                     await _mediator.Publish(new RequestRejectedNotification { Request = requestFromDb });
-                    
+                    await _mediator.Publish(new StatisticUpdateHandler { Request = requestFromDb });
                     break;
             }
 
@@ -217,7 +217,9 @@ namespace BusinessLogic.Services
             await AddAsync(safeModel);                                         
 
             parentRequest.State = VacationState.Rejected;
-            parentRequest.ModifiedByUserId = parentRequest.UserId;            
+            parentRequest.ModifiedByUserId = parentRequest.UserId;
+
+            await _mediator.Publish(new StatisticUpdateHandler { Request = parentRequest });
         }
 
         private async Task<bool> ValidateAccounting(IEnumerable<string> reviewerId)

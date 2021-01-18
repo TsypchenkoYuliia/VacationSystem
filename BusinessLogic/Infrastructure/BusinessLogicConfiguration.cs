@@ -29,6 +29,7 @@ namespace BusinessLogic.Infrastructure
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRequestService, RequestService>();
+            services.AddScoped<IStatisticService, StatisticService>();
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddTransient<IReviewService, ReviewService>();
             services.AddSingleton<IEmailService, EmailService>();

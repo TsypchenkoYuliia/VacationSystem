@@ -20,6 +20,8 @@ namespace DataAccess.Repositories
             return await Entities.Where(predicate)
                  .Include(r => r.Request)
                  .ThenInclude(u => u.Reviews)
+                 .Include(r=>r.Request)
+                 .ThenInclude(u=>u.User)
                  .ToListAsync();
         }
 
@@ -28,6 +30,8 @@ namespace DataAccess.Repositories
             return await Entities.Where(predicate)
                  .Include(r => r.Request)
                  .ThenInclude(u => u.Reviews)
+                 .Include(r => r.Request)
+                 .ThenInclude(u => u.User)
                  .FirstOrDefaultAsync();
         }
     }

@@ -53,6 +53,9 @@ namespace DataAccess.Repositories.Interfaces
             await _context.SaveChangesAsync();
         }
 
-        
+        public async Task<TEntity> FindAsync(TKey id)
+        {
+            return await Entities.FindAsync(id);
+        }
     }
 }

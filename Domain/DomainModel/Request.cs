@@ -15,6 +15,8 @@ namespace Domain.DomainModel
         }
         public int Id { get; set; }
         public VacationType Type { get; set; }
+        [NotMapped]
+        public int TypeId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public ICollection<Review> Reviews { get; set; }

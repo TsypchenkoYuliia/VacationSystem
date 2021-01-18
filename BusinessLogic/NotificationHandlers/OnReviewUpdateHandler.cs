@@ -37,6 +37,7 @@ namespace BusinessLogic.NotificationHandlers
             {
                 requestfromDb.State = VacationState.Approved;
                 new_notification = new RequestApprovedNotification { Request = requestfromDb };
+                await _mediator.Publish(new StatisticAddingHandler { Request = requestfromDb });
             }
             else if (requestfromDb.Reviews.Any(x => x.IsApproved == null))
             {

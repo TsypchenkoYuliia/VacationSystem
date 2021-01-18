@@ -19,7 +19,8 @@ namespace DataAccess.Infrastructure
             services.AddTransient<IRepository<Review, int>, ReviewRepository>();
             services.AddTransient<IRepository<User, string>, UserRepository>();
             services.AddTransient<IRepository<Request, int>, RequestRepository>();
-            
+            services.AddScoped<IRepository<UsedDaysStatistic, int>, StatisticRepository>();
+
             services.AddDbContext<VacationSystemContext>(option =>
                 option.UseSqlServer(configuration.GetConnectionString("defaultConnection")));
 

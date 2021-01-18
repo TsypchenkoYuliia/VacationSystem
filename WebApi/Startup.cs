@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using WebApi.Filters;
 using WebApi.Token;
 
 namespace WebApi
@@ -88,7 +89,7 @@ namespace WebApi
                     ValidateLifetime = true,
                 };
             });
-
+            services.AddScoped<ExceptionFilter>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -112,7 +113,12 @@ namespace WebApi
 
             app.UseAuthentication();
             app.UseAuthorization();
-           
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin() 
+                .AllowAnyHeader()
+                .AllowAnyMethod());
+
             app.UseMvc();
 
         }

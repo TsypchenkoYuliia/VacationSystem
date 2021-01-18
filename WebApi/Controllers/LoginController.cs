@@ -10,37 +10,49 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using WebApi.Exceptions;
 using WebApi.Token;
+using WebApi.ViewModel;
 
 namespace WebApi.Controllers
 {
     [ApiController]
     [AllowAnonymous]
     [Route("[controller]")]
-    public class LoginController : ControllerBase
+    public class LoginController : BaseController
     {
         private readonly IUserService _userService;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private ILogger<LoginController> _logger;
 
-        public LoginController(IUserService userService, SignInManager<User> signInManager, UserManager<User> userManager)
+        public LoginController(IUserService userService, SignInManager<User> signInManager, UserManager<User> userManager, ILogger<LoginController> logger)
         {
             _userService = userService;
             _signInManager = signInManager;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Token(string username, string password)
+        public async Task<IActionResult> Token([FromBody] LoginModel model)
         {
-            var identity = await GetIdentity(username, password);
+            ClaimsIdentity identity = null;
 
-            if (identity == null)
+            try
             {
-                return BadRequest(new { errorText = "Invalid username or password." });
+                identity = await GetIdentity(model.Username, model.Password);
             }
+            catch(Exception ex)
+            {
+                throw new AuthorizeException("Unauthorize", 401); 
+            }
+            
+            if(identity == null)
+                throw new AuthorizeException("Unauthorize", 401); ;
 
             var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(
@@ -53,10 +65,15 @@ namespace WebApi.Controllers
            
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
+            User user = await _userService.GetUser(x => x.UserName == identity.Name);
+
             var response = new
             {
                 access_token = encodedJwt,
-                username = identity.Name
+                userId = user.Id,
+                role = user.Role,
+                firstname = user.FirstName,
+                lastname = user.LastName
             };
 
             return Ok(response);

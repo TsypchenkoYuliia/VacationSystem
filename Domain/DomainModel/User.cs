@@ -17,7 +17,6 @@ namespace Domain.DomainModel
             Requests = new List<Request>();
         }
 
-        [NotMapped]
         public string Role { get; set; }
 
     }

@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace WebApi.Exceptions
 {
-    public class CreateException:Exception
+    public class AuthorizeException:Exception
     {
         public int StatusCode { get; set; }
-        public CreateException(string message, int statusCode) : base(message)
+        public AuthorizeException(string message, int statusCode) : base(message)
         {
             StatusCode = statusCode;
         }
