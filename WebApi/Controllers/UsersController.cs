@@ -31,7 +31,7 @@ namespace WebApi.Controllers
             return users;
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("statistics/{userId}")]
         public async Task<IActionResult> GetById(string userId)
         {
             var user = await _userService.GetUser(userId);

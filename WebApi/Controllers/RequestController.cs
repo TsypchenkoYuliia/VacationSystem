@@ -42,6 +42,7 @@ namespace WebApi.Controllers
             return await _service.GetAllAsync(userId, startDate, endDate, stateId, typeId);
         }
 
+        [Authorize(Roles = "Manager, Employee")]
         [HttpGet("/user/requests")]
         public async Task<IReadOnlyCollection<Request>> Get(DateTime? startDate = null, DateTime? endDate = null, int? stateId = null, int? typeId = null)
         {
@@ -98,8 +99,8 @@ namespace WebApi.Controllers
         [HttpDelete("/user/request/{requestId}")]
         public async Task RejectByOwner(int requestId)
         {
-            var userId = this.User.Identity.Name;
-            await _service.RejectedByOwnerAsync(userId, requestId);
+            User user = await _userService.GetUser(x => x.UserName == this.User.Identity.Name);
+            await _service.RejectedByOwnerAsync(user.Id, requestId);
         }
     }
 

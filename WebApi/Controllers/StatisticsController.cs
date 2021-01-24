@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Models;
 using BusinessLogic.Services.Intarfaces;
+using Domain.DomainModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,22 +11,34 @@ using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
+    [Route("[controller]")]
     [ApiController]
     public class StatisticsController : BaseController
     {
         private IStatisticService _service;
+        private readonly IUserService _userService;
 
-        public StatisticsController(IStatisticService service)
+        public StatisticsController(IStatisticService service, IUserService userService)
         {
             _service = service;
+            _userService = userService;
         }
 
         [Authorize(Roles = "Manager, Employee")]
         [HttpGet]
         public async Task<IEnumerable<UsedDaysStatisticApiModel>> Get()
         {
-            return await _service.GetStatisticByUserAsync(this.User.Identity.Name);
+            User user = await _userService.GetUser(x => x.UserName == this.User.Identity.Name);
+            return await _service.GetStatisticByUserAsync(user.Id);
+        }
+
+        [Authorize(Roles = "Manager, Accountant")]
+        [HttpGet("{userId}")]
+        public async Task<IEnumerable<UsedDaysStatisticApiModel>> Get(string userId)
+        {
+            var res = await _service.GetStatisticByUserAsync(userId);
+            return await _service.GetStatisticByUserAsync(userId);
         }
     }
 }

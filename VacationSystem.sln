@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailModels", "EmailModels\EmailModels.csproj", "{E4248361-6FFE-4F19-9FE0-BEED542EC628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailTemplateRender", "EmailTemplateRender\EmailTemplateRender.csproj", "{D272E803-F323-4085-9F64-22A85F84BD83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailTemplateRender", "EmailTemplateRender\EmailTemplateRender.csproj", "{D272E803-F323-4085-9F64-22A85F84BD83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrations", "Migrations\Migrations.csproj", "{2BD28F31-6917-4A72-BF3B-3BB81A80E484}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{D272E803-F323-4085-9F64-22A85F84BD83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D272E803-F323-4085-9F64-22A85F84BD83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D272E803-F323-4085-9F64-22A85F84BD83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BD28F31-6917-4A72-BF3B-3BB81A80E484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BD28F31-6917-4A72-BF3B-3BB81A80E484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BD28F31-6917-4A72-BF3B-3BB81A80E484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BD28F31-6917-4A72-BF3B-3BB81A80E484}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

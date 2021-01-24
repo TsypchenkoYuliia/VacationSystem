@@ -37,11 +37,12 @@ namespace WebApi.Controllers
                 {
                         User newUser = await _userService.CreateUser(new User()
                         {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Email = model.Email,
-                        UserName = model.Email,
-                        Role = model.Role,
+                            FirstName = model.FirstName,
+                            LastName = model.LastName,
+                            Email = model.Email,
+                            UserName = model.Email,
+                            Role = model.Role,
+                            PhoneNumber = model.PhoneNumber
                         }, model.Password);
 
                     await _userManager.AddToRoleAsync(newUser, model.Role);
@@ -53,6 +54,12 @@ namespace WebApi.Controllers
             }
             else
                 throw new CreateException("User not created: Invalid user data", 422);
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<User> GetUser(string userId)
+        {
+            return await _userService.GetUser(userId);
         }
 
         [HttpGet]
@@ -72,8 +79,14 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] User user)
+        public async Task<IActionResult> UpdateUser([FromBody] User newUser)
         {
+            var user = await _userService.GetUser(newUser.Id);
+            user.FirstName = newUser.FirstName;
+            user.LastName = newUser.LastName;
+            user.Email = newUser.Email;
+            user.PhoneNumber = newUser.PhoneNumber;
+            user.Role = newUser.Role;
             await _userService.UpdateUser(user);
 
             return Ok();

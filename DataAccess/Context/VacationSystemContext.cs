@@ -14,5 +14,9 @@ namespace DataAccess.Context
         {
             Database.EnsureCreated();
         }
+
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<UsedDaysStatistic> UsedDaysStatistics { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,7 +8,7 @@ namespace Domain.DomainModel
     public class UsedDaysStatistic
     {
         public int Id { get; set; }
-        public ValueType Type { get; set; }
+        public VacationType Type { get; set; }
         public int NumberDaysUsed { get; set; }
         public string Year { get; set; }
         public User User { get; set; }
