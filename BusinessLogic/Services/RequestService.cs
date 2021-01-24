@@ -268,7 +268,7 @@ namespace BusinessLogic.Services
                 throw new NoReviewerException("Not defined accounting", 409);
 
             //reviewers must have managers
-            if (request.Type == VacationType.Administrative || request.Type == VacationType.Study || request.Type == VacationType.Annual)
+            if (request.Type == VacationType.Administrative || request.Type == VacationType.Study || request.Type == VacationType.Annual || request.Type == VacationType.Sick)
             {
                 if (!await ValidateManagers(request.ReviewsIds))
                     throw new NoReviewerException("Not all managers defined", 409);

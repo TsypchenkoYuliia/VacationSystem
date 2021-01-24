@@ -30,7 +30,7 @@ namespace WebApi.Controllers
         public async Task<IEnumerable<UsedDaysStatisticApiModel>> Get()
         {
             User user = await _userService.GetUser(x => x.UserName == this.User.Identity.Name);
-            return await _service.GetStatisticByUserAsync(user.Id);
+            return (await _service.GetStatisticByUserAsync(user.Id)).Where(x=>x.Days > 0);
         }
 
         [Authorize(Roles = "Manager, Accountant")]
@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         public async Task<IEnumerable<UsedDaysStatisticApiModel>> Get(string userId)
         {
             var res = await _service.GetStatisticByUserAsync(userId);
-            return await _service.GetStatisticByUserAsync(userId);
+            return (await _service.GetStatisticByUserAsync(userId)).Where(x => x.Days > 0);
         }
     }
 }
