@@ -14,3 +14,6 @@ Login success. User: yutsypa@gmail.com
 Application started. Press Ctrl+C to shut down.
 Hosting environment: Development
 Content root path: C:\Users\tsypa\source\repos\Diplom\VacationSystem_new\WebApi
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\tsypa\source\repos\Diplom\VacationSystem_new\WebApi
