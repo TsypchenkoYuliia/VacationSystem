@@ -24,10 +24,11 @@ namespace WebApi.Controllers
         private readonly UserManager<User> _userManager;
         private ILogger<AccountController> _logger;
 
-        public AccountController(IUserService userService, UserManager<User> userManager)
+        public AccountController(IUserService userService, UserManager<User> userManager, ILogger<AccountController> logger)
         {
             _userService = userService;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [HttpPost]

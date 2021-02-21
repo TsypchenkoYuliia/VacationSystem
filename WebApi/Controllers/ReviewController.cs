@@ -19,10 +19,11 @@ namespace WebApi.Controllers
         private IReviewService _service;
         private readonly IUserService _userService;
         private ILogger<ReviewController> _logger;
-        public ReviewController(IReviewService service, IUserService userService)
+        public ReviewController(IReviewService service, IUserService userService, ILogger<ReviewController> logger)
         {
             _service = service;
             _userService = userService;
+            _logger = logger;
         }
 
         [Authorize(Roles = "Manager, Accountant")]

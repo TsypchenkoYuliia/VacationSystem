@@ -18,7 +18,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebApi.Filters;
-using WebApi.Logger;
 using WebApi.Token;
 
 namespace WebApi
@@ -94,16 +93,11 @@ namespace WebApi
                 };
             });
             services.AddScoped<ExceptionFilter>();
+            
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
-            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
-            var logger = loggerFactory.CreateLogger("FileLogger");
-
-            
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
