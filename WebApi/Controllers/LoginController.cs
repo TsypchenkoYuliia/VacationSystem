@@ -67,6 +67,8 @@ namespace WebApi.Controllers
 
             User user = await _userService.GetUser(x => x.UserName == identity.Name);
 
+            _logger.LogInformation("Login success. User: {User}", model.Username);
+
             var response = new
             {
                 access_token = encodedJwt,

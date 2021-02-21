@@ -79,14 +79,19 @@ namespace WebApi.Controllers
 
             Request newRequest = await _service.AddAsync(model);
 
+            _logger.LogInformation($"Request created successfully(id: {newRequest.Id}, author: {model.UserId})");
+
             return Ok(newRequest);
         }
 
+        [Authorize(Roles = "Manager, Employee")]
         [HttpPut("/request/{requestId}")]
         public async Task Put(int requestId, [FromBody] Request newModel)
         {
-            newModel.UserId = this.User.Identity.Name;
+            User user = await _userService.GetUser(x => x.UserName == this.User.Identity.Name);
+            newModel.UserId = user.Id;
             await _service.UpdateAsync(requestId, newModel);
+            _logger.LogInformation($"Request updated successfully(id: {requestId})");
         }
 
         [Authorize(Roles = "Manager, Accountant, Admin")]
@@ -94,6 +99,7 @@ namespace WebApi.Controllers
         public async Task Delete(int requestId)
         {
             await _service.DeleteAsync(requestId);
+            _logger.LogInformation($"Request deleted successfully(id: {requestId})");
         }
 
         [HttpDelete("/user/request/{requestId}")]
@@ -101,6 +107,7 @@ namespace WebApi.Controllers
         {
             User user = await _userService.GetUser(x => x.UserName == this.User.Identity.Name);
             await _service.RejectedByOwnerAsync(user.Id, requestId);
+            _logger.LogInformation($"Request rejected by author (id: {requestId}, authorId: {user.Id})");
         }
     }
 

@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
-    <ProjectReference Include="..\Migrations\Migrations.csproj"/>
+    <ProjectReference Include="..\Migrations\Migrations.csproj" />
   </ItemGroup>
 
 

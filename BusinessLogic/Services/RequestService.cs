@@ -225,6 +225,7 @@ namespace BusinessLogic.Services
         private async Task<bool> ValidateAccounting(IEnumerable<string> reviewerId)
         {
             //check first reviewer, must be Accountant
+            
             var accountantReview = await _userService.GetUser(reviewerId.FirstOrDefault());
             accountantReview.Role = (await _userManager.GetRolesAsync(accountantReview)).FirstOrDefault();
             return (accountantReview.Role == RoleName.Accountant.ToString());

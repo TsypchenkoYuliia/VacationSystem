@@ -4,6 +4,7 @@ using Domain.DomainModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,6 @@ namespace WebApi.Controllers
     {
         private IStatisticService _service;
         private readonly IUserService _userService;
-
         public StatisticsController(IStatisticService service, IUserService userService)
         {
             _service = service;

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace WebApi.Controllers
     {
         private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
+        private ILogger<AccountController> _logger;
 
         public AccountController(IUserService userService, UserManager<User> userManager)
         {
@@ -46,6 +48,8 @@ namespace WebApi.Controllers
                         }, model.Password);
 
                     await _userManager.AddToRoleAsync(newUser, model.Role);
+
+                    _logger.LogInformation("Account created successfully( id: {UserId}, username: {User} )", newUser.UserName, newUser.Id);
 
                     return Ok(newUser);
                 }

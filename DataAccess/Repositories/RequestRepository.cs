@@ -18,7 +18,7 @@ namespace DataAccess.Repositories
         public async override Task<Request> FindAsync(Expression<Func<Request, bool>> predicate)
         {
             return await Entities.Where(predicate)
-                 .Include(r => r.Reviews)
+                 .Include(r => r.Reviews).ThenInclude(x => x.Reviewer)
                  .Include(u=>u.User)
                  .FirstOrDefaultAsync();
         }
@@ -26,7 +26,7 @@ namespace DataAccess.Repositories
         public async override Task<IReadOnlyCollection<Request>> FilterAsync(Expression<Func<Request, bool>> predicate)
         {
             return await Entities.Where(predicate)
-                 .Include(r => r.Reviews)
+                 .Include(r => r.Reviews).ThenInclude(x=>x.Reviewer)
                  .Include(u => u.User)
                  .ToListAsync();
         }

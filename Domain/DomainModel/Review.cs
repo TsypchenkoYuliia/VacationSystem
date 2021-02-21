@@ -7,7 +7,7 @@ namespace Domain.DomainModel
     public class Review
     {
         public int Id { get; set; }
-        public User Reviewer { get; set; }
+        public virtual User Reviewer { get; set; }
         public string ReviewerId { get; set; }
         public bool? IsApproved { get; set; }
         public Request Request { get; set; }

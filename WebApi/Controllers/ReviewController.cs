@@ -3,6 +3,7 @@ using Domain.DomainModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace WebApi.Controllers
     {
         private IReviewService _service;
         private readonly IUserService _userService;
+        private ILogger<ReviewController> _logger;
         public ReviewController(IReviewService service, IUserService userService)
         {
             _service = service;
@@ -46,6 +48,7 @@ namespace WebApi.Controllers
             var reviewer = await _userService.GetUser(x => x.UserName == this.User.Identity.Name);
 
             await _service.UpdateAsync(id, model, reviewer.Id);
+            _logger.LogInformation($"Review updated successfully (id: {id}, state: {model.IsApproved})");
         }
 
 
@@ -53,6 +56,7 @@ namespace WebApi.Controllers
         public async Task Delete(int id)
         {
             await _service.DeleteAsync(id);
+            _logger.LogInformation($"Review deleted successfully (id: {id})");
         }
     }
 }
