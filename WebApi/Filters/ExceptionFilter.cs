@@ -35,6 +35,9 @@ namespace WebApi.Filters
                 case ConflictException conflictException:
                     contextResult.StatusCode = 409;
                     break;
+                case StateException stateException:
+                    contextResult.StatusCode = 409;
+                    break;
                 default:
                     contextResult.StatusCode = 500;
                     break;
