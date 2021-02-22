@@ -1,52 +1,56 @@
-﻿using BusinessLogic.Notification;
-using BusinessLogic.Services.Intarfaces;
-using BusinessLogic.Settings;
+﻿using BusinessLogic.Services.Intarfaces;
 using DataAccess.Repositories.Interfaces;
 using Domain.DomainModel;
-using EmailModels.Models;
 using EmailTemplateRender.Services;
-using EmailTemplateRender.Views.Emails;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading;
+using BusinessLogic.Settings;
+using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
+using System.Threading;
+using EmailModels.Models;
+using System.Linq;
+using EmailTemplateRender.Views.Emails;
 
 namespace BusinessLogic.NotificationHandlers
 {
-    class RequestEmailHandler : INotificationHandler<RequestCreatedNotification>
+    class RequestUpdatedEmailHandelr : INotificationHandler<RequestUpdatedNotification>
     {
         IRepository<Review, int> _reviewRepository;
         UserManager<User> _userManager;
-        //IStringLocalizer<SharedEmailResources> _localizer;
         IRazorViewToStringRenderer _razorViewToStringRenderer;
-        //IMapper _mapper;
         IEmailService _mailer;
         UrlConfig _uiConfig;
-        //UIConfig _uiConfig;
 
-        public RequestEmailHandler(IRepository<Review, int> revRepository, UserManager<User> userManager, IEmailService mailer, IOptions<UrlConfig> uiConfig, IRazorViewToStringRenderer razorViewToStringRenderer)
+        public RequestUpdatedEmailHandelr(
+            IRepository<Review, int>
+            revRepository, UserManager<User> userManager,
+            IRazorViewToStringRenderer razorViewToStringRenderer,
+            IEmailService mailer,
+            IOptions<UrlConfig> uiConfig)
         {
             _reviewRepository = revRepository;
+            _razorViewToStringRenderer = razorViewToStringRenderer;
             _userManager = userManager;
             _mailer = mailer;
             _uiConfig = uiConfig.Value;
-            _razorViewToStringRenderer = razorViewToStringRenderer;
         }
 
-        public async Task Handle(RequestCreatedNotification notification, CancellationToken cancellationToken)
+        public async Task Handle(RequestUpdatedNotification notification, CancellationToken cancellationToken)
         {
             Request request = notification.Request;
 
-            RequestDataForEmail model = new RequestDataForEmail { RequestType = request.Type.ToString(),
+            RequestDataForEmail model = new RequestDataForEmail
+            {
+                AuthorFullName = $"{request.User.FirstName} {request.User.LastName}".Trim(),
+                RequestType = request.Type.ToString(),
                 StartDate = request.StartDate.Date.ToString("dd/MM/yyyy"),
                 EndDate = request.EndDate.Date.ToString("dd/MM/yyyy"),
                 Comment = request.Comment,
-                Duration = request.EndDate.Date.Subtract(request.StartDate.Date).Days+1,        
+                Duration = request.EndDate.Date.Subtract(request.StartDate.Date).Days + 1,
             };
 
             User author = await _userManager.FindByIdAsync(request.UserId.ToString());
@@ -61,16 +65,18 @@ namespace BusinessLogic.NotificationHandlers
             model.ApprovedFullNames = string.Join(", ", approvedPeopleNames);
 
             var curReview = reviews.Where(r => r.IsApproved == null).FirstOrDefault();
-
             string address = curReview.Reviewer.Email;
-
-            string theme = string.Format(model.AuthorFullName +", "+ model.StartDate + " - " + model.EndDate + ", " + "type: " + model.RequestType);
+            string theme = string.Format(
+                    model.AuthorFullName,
+                    model.StartDate,
+                    model.EndDate
+                    );
 
             string reference = _uiConfig.Url + $"/reviews";
 
             var dataForViewModel = new RequestEmailViewModel(model, reference);
 
-            string body = await _razorViewToStringRenderer.RenderViewToStringAsync("/Views/Emails/RequestUpdate/RequestUpdate.cshtml", dataForViewModel); ;
+            string body = await _razorViewToStringRenderer.RenderViewToStringAsync("/Views/Emails/RequestUpdate/RequestUpdate.cshtml", dataForViewModel);
 
             await _mailer.SendEmailAsync(address, theme, body);
         }

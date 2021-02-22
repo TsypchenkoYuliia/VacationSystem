@@ -77,6 +77,8 @@ namespace WebApi.Controllers
             User user = await _userService.GetUser(x => x.UserName == this.User.Identity.Name);
             model.UserId = user.Id;
 
+            model.CreatedDate = DateTime.Now.Date;
+
             Request newRequest = await _service.AddAsync(model);
 
             _logger.LogInformation($"Request created successfully(id: {newRequest.Id}, author: {model.UserId})");

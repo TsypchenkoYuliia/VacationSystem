@@ -31,15 +31,14 @@ namespace WebApi.Controllers
         public async Task<IEnumerable<Review>> Get(int? requestId = null, int? stateId = null, DateTime? startDate = null, DateTime? endDate = null, string name = null, int? typeId = null)
         {
             var reviewer = await _userService.GetUser(x => x.UserName == this.User.Identity.Name);
-            var res = await _service.GetAllAsync(reviewer.Id, requestId, stateId, startDate, endDate, name, typeId); ;
-            return await _service.GetAllAsync(reviewer.Id, requestId, stateId, startDate, endDate, name, typeId); ;
+            return (await _service.GetAllAsync(reviewer.Id, requestId, stateId, startDate, endDate, name, typeId)).OrderByDescending(x=>x.Request.CreatedDate.Date);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpGet("/reviews")]
         public async Task<IEnumerable<Review>> Get(string reviewerId = null, int? requestId = null, int? stateId = null, DateTime? startDate = null, DateTime? endDate = null, string name = null, int? typeId = null)
         {
-            return await _service.GetAllAsync(reviewerId, requestId, stateId, startDate, endDate, name, typeId); ;
+            return (await _service.GetAllAsync(reviewerId, requestId, stateId, startDate, endDate, name, typeId)).OrderByDescending(x => x.Request.CreatedDate.Date);
         }
 
         [Authorize(Roles = "Manager, Accountant")]

@@ -19,6 +19,7 @@ namespace Domain.DomainModel
         public int TypeId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         public ICollection<Review> Reviews { get; set; }
         [NotMapped]
         public ICollection<string> ReviewsIds { get; set; }

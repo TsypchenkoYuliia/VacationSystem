@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BusinessLogic
 {
-    class RequestUpdatedNotification : INotification
+    public class RequestUpdatedNotification : INotification
     {
         public Request Request { get; set; }
     }
