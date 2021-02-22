@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 using BusinessLogic.Services.Intarfaces;
 using Domain.DomainModel;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using WebApi.Exceptions;
 using WebApi.Token;
 using WebApi.ViewModel;
@@ -48,11 +46,11 @@ namespace WebApi.Controllers
             }
             catch(Exception ex)
             {
-                throw new AuthorizeException("Unauthorize", 401); 
+                throw new AuthorizeException("TestUnauthorize", 401); 
             }
             
             if(identity == null)
-                throw new AuthorizeException("Unauthorize", 401); ;
+                throw new AuthorizeException("TestUnauthorize", 401); ;
 
             var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(

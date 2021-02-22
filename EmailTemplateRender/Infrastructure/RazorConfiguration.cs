@@ -1,9 +1,7 @@
 ﻿using EmailTemplateRender.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace EmailTemplateRender.Infrastructure
 {

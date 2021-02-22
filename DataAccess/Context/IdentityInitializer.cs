@@ -1,9 +1,6 @@
 ﻿using DataAccess.Context.Enum;
 using Domain.DomainModel;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Context

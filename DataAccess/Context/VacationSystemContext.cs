@@ -1,9 +1,6 @@
 ﻿using Domain.DomainModel;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DataAccess.Context
 {
@@ -12,7 +9,7 @@ namespace DataAccess.Context
         public VacationSystemContext(DbContextOptions<VacationSystemContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         public DbSet<Request> Requests { get; set; }
